@@ -78,20 +78,22 @@ public class ChickenOrderController {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }
+
     @GetMapping("/by-status")
     public ResponseEntity<List<ChickenOrder>> getByStatus(@RequestParam OrderStatus status) {
         return new ResponseEntity<>(chickenOrderService.getByStatus(status), HttpStatus.OK);
     }
+
     @GetMapping("/between")
     public ResponseEntity<List<ChickenOrder>> getBetween(@RequestParam String start,
             @RequestParam String end) {
-        LocalDate startDate = LocalDate.parse(start);  
+        LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         return new ResponseEntity<>(chickenOrderService.getBetween(startDate, endDate), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateStatus( @PathVariable UUID id, @RequestParam OrderStatus status) {
+    public ResponseEntity<String> updateStatus(@PathVariable UUID id, @RequestParam OrderStatus status) {
         String message = chickenOrderService.updateStatus(id, status);
         if (message.equals(ChickenOrderService.NOT_FOUND)) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
@@ -101,6 +103,16 @@ public class ChickenOrderController {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }
+
+    @GetMapping("/stats/by-status")
+    public ResponseEntity<List<Object[]>> getStatsByStatus() {
+        return new ResponseEntity<>(chickenOrderService.getStatsByStatus(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/cancel-day")
+    public ResponseEntity<String> cancelDay(@RequestParam UUID salesAgentId, @RequestParam String date) {
+        LocalDate day = LocalDate.parse(date);
+        String message = chickenOrderService.cancelDay(salesAgentId, day);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 }
-
-

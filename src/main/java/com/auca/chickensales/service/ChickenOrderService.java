@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auca.chickensales.entity.ChickenOrder;
 import com.auca.chickensales.entity.OrderStatus;
@@ -27,6 +28,7 @@ public class ChickenOrderService {
     @Autowired
     private SaleRecordRepository saleRecordRepository;
 
+    
     public String save(ChickenOrder chickenOrder) {
         if (chickenOrder.getOrderDate().isBefore(LocalDate.now())) {
             return PAST_DATE;
@@ -105,5 +107,16 @@ public class ChickenOrderService {
 
     public List<ChickenOrder> getBetween(LocalDate start, LocalDate end) {
         return chickenOrderRepository.findByOrderDateBetweenOrderByOrderDateAsc(start, end);
+    }
+
+    public List<Object[]> getStatsByStatus() {
+        return chickenOrderRepository.countOrdersByStatus();
+    }
+
+    @Transactional
+    public String cancelDay(UUID salesAgentId, LocalDate date) {
+        int count = chickenOrderRepository.cancelOrdersOfDay(
+                salesAgentId, date, OrderStatus.CANCELLED, OrderStatus.DELIVERED);
+        return count + " chicken orders cancelled";
     }
 }
