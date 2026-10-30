@@ -1,5 +1,6 @@
 package com.auca.chickensales.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auca.chickensales.entity.ChickenOrder;
+import com.auca.chickensales.entity.OrderStatus;
 import com.auca.chickensales.repository.ChickenOrderRepository;
 
 
@@ -56,5 +58,11 @@ public class ChickenOrderService {
         }
         chickenOrderRepository.deleteById(id);
         return "Chicken order deleted successfully";
+    }
+    public List<ChickenOrder> getByStatus(OrderStatus status) {
+        return chickenOrderRepository.findByStatusOrderByOrderDateAsc(status);
+    }
+    public List<ChickenOrder> getBetween(LocalDate start, LocalDate end) {
+        return chickenOrderRepository.findByOrderDateBetweenOrderByOrderDateAsc(start, end);
     }
 }

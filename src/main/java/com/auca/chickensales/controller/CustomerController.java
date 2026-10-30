@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auca.chickensales.entity.Customer;
@@ -65,5 +66,9 @@ public class CustomerController {
         } else {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
+    }
+        @GetMapping("/by-last-name")
+    public ResponseEntity<List<Customer>> getByLastName(@RequestParam String lastName) {
+        return new ResponseEntity<>(customerService.getByLastName(lastName), HttpStatus.OK);
     }
 }

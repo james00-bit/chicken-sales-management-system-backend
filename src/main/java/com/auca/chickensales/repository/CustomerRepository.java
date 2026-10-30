@@ -1,5 +1,6 @@
 package com.auca.chickensales.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ import com.auca.chickensales.entity.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
+     List<Customer> findByLastNameIgnoreCaseOrderByFirstNameAsc(String lastName);
 }
