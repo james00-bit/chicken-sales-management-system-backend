@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.auca.chickensales.entity.ChickenOrder;
 import com.auca.chickensales.entity.OrderStatus;
 import com.auca.chickensales.repository.ChickenOrderRepository;
+import com.auca.chickensales.repository.SaleRecordRepository;
 
 @Service
 public class ChickenOrderService {
@@ -18,12 +19,15 @@ public class ChickenOrderService {
     public static final String PAST_DATE = "Chicken order date cannot be in the past";
     public static final String AGENT_BUSY = "Sales agent already serves an order on that date";
     public static final String NOT_FOUND = "The chicken order with that id does not exist";
+    public static final String HAS_RECORDS = "That chicken order has sale records, delete them first";
 
     @Autowired
     private ChickenOrderRepository chickenOrderRepository;
 
+    @Autowired
+    private SaleRecordRepository saleRecordRepository;
+
     public String save(ChickenOrder chickenOrder) {
-        // Rule 1: the date cannot be before today
         if (chickenOrder.getOrderDate().isBefore(LocalDate.now())) {
             return PAST_DATE;
         }
@@ -31,7 +35,6 @@ public class ChickenOrderService {
                 chickenOrder.getSalesAgent().getId(), chickenOrder.getOrderDate(), OrderStatus.CANCELLED)) {
             return AGENT_BUSY;
         }
-
         chickenOrder.setStatus(OrderStatus.PLACED);
         chickenOrderRepository.save(chickenOrder);
         return "Chicken order saved successfully";
@@ -89,11 +92,13 @@ public class ChickenOrderService {
         if (found.isEmpty()) {
             return NOT_FOUND;
         }
+        if (saleRecordRepository.existsByChickenOrder(found.get())) {
+            return HAS_RECORDS;
+        }
         chickenOrderRepository.deleteById(id);
         return "Chicken order deleted successfully";
     }
 
-    
     public List<ChickenOrder> getByStatus(OrderStatus status) {
         return chickenOrderRepository.findByStatusOrderByOrderDateAsc(status);
     }

@@ -72,6 +72,8 @@ public class ChickenOrderController {
         String message = chickenOrderService.delete(id);
         if (message.equals(ChickenOrderService.NOT_FOUND)) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals(ChickenOrderService.HAS_RECORDS)) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
         } else {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
