@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,7 +33,13 @@ public class ChickenOrderController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody ChickenOrder chickenOrder) {
         String message = chickenOrderService.save(chickenOrder);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        if (message.equals(ChickenOrderService.PAST_DATE)) {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        } else if (message.equals(ChickenOrderService.AGENT_BUSY)) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.CREATED);
+        }
     }
 
     @GetMapping("/all")
@@ -60,7 +67,6 @@ public class ChickenOrderController {
         }
     }
 
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = chickenOrderService.delete(id);
@@ -77,8 +83,22 @@ public class ChickenOrderController {
     @GetMapping("/between")
     public ResponseEntity<List<ChickenOrder>> getBetween(@RequestParam String start,
             @RequestParam String end) {
-        LocalDate startDate = LocalDate.parse(start);   
+        LocalDate startDate = LocalDate.parse(start);  
         LocalDate endDate = LocalDate.parse(end);
         return new ResponseEntity<>(chickenOrderService.getBetween(startDate, endDate), HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateStatus( @PathVariable UUID id, @RequestParam OrderStatus status) {
+        String message = chickenOrderService.updateStatus(id, status);
+        if (message.equals(ChickenOrderService.NOT_FOUND)) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.startsWith("Cannot change status")) {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
 }
+
+

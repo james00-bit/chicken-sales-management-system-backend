@@ -9,9 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.auca.chickensales.entity.SalesAgent;
+import com.auca.chickensales.entity.Stall;
 
 @Repository
 public interface SalesAgentRepository extends JpaRepository<SalesAgent, UUID> {
     @Query("SELECT s FROM SalesAgent s JOIN s.breeds b WHERE LOWER(b.name) = LOWER(:name)")
     List<SalesAgent> findByBreedName(@Param("name") String name);
+    boolean existsByStall(Stall stall);
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -57,6 +58,17 @@ public class SalesAgentController {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }
+    @PutMapping("/{salesAgentId}/breeds/{breedId}")
+    public ResponseEntity<String> addBreed(@PathVariable UUID salesAgentId, @PathVariable UUID breedId) {
+        String message = salesAgentService.addBreed(salesAgentId, breedId);
+        if (message.equals(SalesAgentService.NOT_FOUND) || message.equals(SalesAgentService.BREED_NOT_FOUND)) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals(SalesAgentService.ALREADY_HAS_BREED)) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+    }
     
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
@@ -70,5 +82,16 @@ public class SalesAgentController {
     @GetMapping("/bybreed")
     public ResponseEntity<List<SalesAgent>> getByBreed(@RequestParam String name) {
         return new ResponseEntity<>(salesAgentService.getByBreed(name), HttpStatus.OK);
+    }
+@PatchMapping("/{salesAgentId}/stall")
+    public ResponseEntity<String> changeStall(@PathVariable UUID salesAgentId, @RequestParam int stallNumber) {
+        String message = salesAgentService.changeStall(salesAgentId, stallNumber);
+        if (message.equals(SalesAgentService.NOT_FOUND) || message.equals(SalesAgentService.STALL_NOT_FOUND)) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        } else if (message.equals(SalesAgentService.STALL_TAKEN)) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
     }
 }

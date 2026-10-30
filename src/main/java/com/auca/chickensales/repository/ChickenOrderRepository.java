@@ -13,5 +13,6 @@ import com.auca.chickensales.entity.OrderStatus;
 public interface ChickenOrderRepository extends JpaRepository<ChickenOrder, UUID> {
     List<ChickenOrder> findByStatusOrderByOrderDateAsc(OrderStatus status);
     List<ChickenOrder> findByOrderDateBetweenOrderByOrderDateAsc(LocalDate start, LocalDate end);
+    boolean existsBySalesAgentIdAndOrderDateAndStatusNot(UUID salesAgentId, LocalDate orderDate, OrderStatus status);
 }
 
