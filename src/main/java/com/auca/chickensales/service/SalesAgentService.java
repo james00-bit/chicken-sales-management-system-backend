@@ -54,4 +54,7 @@ public class SalesAgentService {
         salesAgentRepository.deleteById(id);
         return "Sales agent deleted successfully";
     }
+    public List<SalesAgent> getByBreed(String name) {
+        return salesAgentRepository.findByBreedName(name);
+    }
 }

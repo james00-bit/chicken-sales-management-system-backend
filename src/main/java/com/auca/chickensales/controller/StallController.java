@@ -67,4 +67,8 @@ public class StallController {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }
+    @GetMapping("/free")
+    public ResponseEntity<List<Stall>> getFreeStalls() {
+        return new ResponseEntity<>(stallService.getFreeStalls(), HttpStatus.OK);
+    }
 }

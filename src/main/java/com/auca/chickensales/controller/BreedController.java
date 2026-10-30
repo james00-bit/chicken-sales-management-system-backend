@@ -68,4 +68,8 @@ public class BreedController {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }
+    @GetMapping("/unused")
+    public ResponseEntity<List<Breed>> getUnusedBreeds() {
+        return new ResponseEntity<>(breedService.getUnusedBreeds(), HttpStatus.OK);
+    }
 }

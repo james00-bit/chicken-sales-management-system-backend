@@ -1,5 +1,4 @@
 package com.auca.chickensales.controller;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.auca.chickensales.entity.Customer;
 import com.auca.chickensales.service.CustomerService;
+import com.auca.chickensales.service.SalesAgentService;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -70,5 +70,16 @@ public class CustomerController {
         @GetMapping("/by-last-name")
     public ResponseEntity<List<Customer>> getByLastName(@RequestParam String lastName) {
         return new ResponseEntity<>(customerService.getByLastName(lastName), HttpStatus.OK);
+    }
+@Autowired
+    private SalesAgentService salesAgentService;
+
+    @GetMapping("/of-sales-agent/{salesAgentId}")
+    public ResponseEntity<Object> getBySalesAgent(@PathVariable UUID salesAgentId) {
+        if (salesAgentService.getById(salesAgentId).isEmpty()) {
+            return new ResponseEntity<>(SalesAgentService.NOT_FOUND, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(customerService.getBySalesAgent(salesAgentId), HttpStatus.OK);
+        }
     }
 }

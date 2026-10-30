@@ -58,4 +58,7 @@ public class CustomerService {
     public List<Customer> getByLastName(String lastName) {
         return customerRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
     }
+    public List<Customer> getBySalesAgent(UUID salesAgentId) {
+        return customerRepository.findCustomersBySalesAgentId(salesAgentId);
+    }
 }

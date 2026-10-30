@@ -53,4 +53,7 @@ public class BreedService {
         breedRepository.deleteById(id);
         return "Breed deleted successfully";
     }
+    public List<Breed> getUnusedBreeds() {
+        return breedRepository.findUnusedBreeds();
+    }
 }

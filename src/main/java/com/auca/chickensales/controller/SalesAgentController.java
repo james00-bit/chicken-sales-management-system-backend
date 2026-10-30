@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auca.chickensales.entity.SalesAgent;
@@ -65,5 +66,9 @@ public class SalesAgentController {
         } else {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
+    }
+    @GetMapping("/bybreed")
+    public ResponseEntity<List<SalesAgent>> getByBreed(@RequestParam String name) {
+        return new ResponseEntity<>(salesAgentService.getByBreed(name), HttpStatus.OK);
     }
 }
