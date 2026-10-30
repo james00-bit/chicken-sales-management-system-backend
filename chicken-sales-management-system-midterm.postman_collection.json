@@ -1,0 +1,41 @@
+{
+  "info": {
+    "name": "chicken-sales-management-system-midterm",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "A2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderDate\": \"2026-10-20\",\n  \"status\": \"PAID\",\n  \"chickens\": 10,\n  \"totalPrice\": 50000,\n  \"customer\": {\n    \"id\": \"PUT-CUSTOMER-ID\"\n  },\n  \"salesAgent\": {\n    \"id\": \"PUT-SALES-AGENT-ID\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/chicken-orders/save",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "chicken-orders",
+            "save"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
